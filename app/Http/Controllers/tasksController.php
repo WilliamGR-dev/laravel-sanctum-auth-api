@@ -54,7 +54,15 @@ class tasksController extends Controller
     {
         //
         $userId = $request->user()->id;
-        $task = DB::table('tasks')->where('user_id', $userId)->where('user_id', $id)->first();
+        $task = DB::table('tasks')->where('id', $id)->first();
+
+        if (!$task) {
+            return response()->json(['message' => "Not Found"], 404);
+        }
+
+        if ($task->user_id != $request->user()->id) {
+            return response()->json(["message" => "Forbidden"], 403);
+        }
 
         return response()->json(['sucess' => 'Get task', 'result' => $task], 200);
     }
@@ -73,6 +81,17 @@ class tasksController extends Controller
             'body' => 'required',
             'completed' => 'required',
         ]);
+
+
+        $task = DB::table('tasks')->where('id', $id)->first();
+
+        if (!$task) {
+            return response()->json(['message' => "Not Found"], 404);
+        }
+
+        if ($task->user_id != $request->user()->id) {
+            return response()->json(["message" => "Forbidden"], 403);
+        }
 
         $userId = $request->user()->id;
         DB::table('tasks')->where('user_id', $userId)->where('user_id', $id)->update([
@@ -93,6 +112,16 @@ class tasksController extends Controller
     public function destroy(Request $request, $id)
     {
         //
+
+        $task = DB::table('tasks')->where('id', $id)->first();
+
+        if (!$task) {
+            return response()->json(['message' => "Not Found"], 404);
+        }
+
+        if ($task->user_id != $request->user()->id) {
+            return response()->json(["message" => "Forbidden"], 403);
+        }
 
         $userId = $request->user()->id;
         $taskDelete = DB::table('tasks')->where('user_id', $userId)->where('user_id', $id)->delete();
