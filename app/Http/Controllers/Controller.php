@@ -30,7 +30,12 @@ class Controller extends BaseController
      *   @OA\RequestBody(
      *       required=true,
      *       description="form to create user",
-     *       @OA\JsonContent()
+     *       @OA\JsonContent(
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *       @OA\Property(property="persistent", type="boolean", example="true"),
+     *    ),
      *   ),
      *   @OA\Response(
      *     response=200,
